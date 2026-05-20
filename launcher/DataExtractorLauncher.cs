@@ -4,7 +4,6 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace DataExtractorLauncher
 {
@@ -13,15 +12,9 @@ namespace DataExtractorLauncher
         private const string AppUrl = "http://localhost:4173";
         private const string ServerFile = "server.js";
         private static Process ServerProcess;
-        private static NotifyIcon TrayIcon;
-        private static bool ServerStartedByUs;
 
-        [STAThread]
         private static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             string appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (string.IsNullOrEmpty(appDir))
             {
@@ -51,36 +44,27 @@ namespace DataExtractorLauncher
                     ShowError("Server failed to start. Check that port 4173 is available.");
                     return;
                 }
-                ServerStartedByUs = true;
             }
 
-            TrayIcon = new NotifyIcon
-            {
-                Text = "Data Extractor",
-                Visible = true
-            };
+            Console.WriteLine("Data Extractor started at " + AppUrl);
+            Console.WriteLine("Close the browser window to shut down completely.");
 
-            try
+            Process browserProcess = OpenApp();
+
+            if (browserProcess != null)
             {
-                TrayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+                browserProcess.WaitForExit();
             }
-            catch
+            else
             {
-                // Continue without custom icon
+                Console.WriteLine("Press Enter to shut down...");
+                Console.ReadLine();
             }
 
-            ContextMenuStrip menu = new ContextMenuStrip();
-            menu.Items.Add("Open Data Extractor", null, (s, e) => OpenApp());
-            menu.Items.Add(new ToolStripSeparator());
-            menu.Items.Add("Exit", null, (s, e) => ExitApp());
-            TrayIcon.ContextMenuStrip = menu;
-            TrayIcon.DoubleClick += (s, e) => OpenApp();
-
-            OpenApp();
-            Application.Run();
+            Shutdown();
         }
 
-        private static void OpenApp()
+        private static Process OpenApp()
         {
             string[] browsers = { "chrome.exe", "msedge.exe", "brave.exe", "opera.exe", "firefox.exe" };
             foreach (string browser in browsers)
@@ -93,18 +77,16 @@ namespace DataExtractorLauncher
                         string args = browser == "firefox.exe"
                             ? "-new-window " + AppUrl
                             : "--app=" + AppUrl + " --window-size=1280,800";
-                        Process.Start(new ProcessStartInfo
+                        return Process.Start(new ProcessStartInfo
                         {
                             FileName = path,
                             Arguments = args,
                             UseShellExecute = false
                         });
-                        return;
                     }
                 }
                 catch
                 {
-                    // Try next browser
                 }
             }
 
@@ -114,16 +96,13 @@ namespace DataExtractorLauncher
             }
             catch
             {
-                // Silent fail
             }
+            return null;
         }
 
-        private static void ExitApp()
+        private static void Shutdown()
         {
-            TrayIcon.Visible = false;
-            TrayIcon.Dispose();
-
-            if (ServerStartedByUs && ServerProcess != null && !ServerProcess.HasExited)
+            if (ServerProcess != null && !ServerProcess.HasExited)
             {
                 try
                 {
@@ -132,11 +111,9 @@ namespace DataExtractorLauncher
                 }
                 catch
                 {
-                    // Process already exited
                 }
             }
-
-            Application.Exit();
+            Console.WriteLine("Data Extractor shut down.");
         }
 
         private static string FindNode(string appDir)
@@ -256,7 +233,7 @@ namespace DataExtractorLauncher
 
         private static void ShowError(string message)
         {
-            MessageBox.Show(message, "Data Extractor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Console.Error.WriteLine("ERROR: " + message);
         }
     }
 }
