@@ -1,7 +1,7 @@
 {
-  "name": "data-tool",
+  "name": "data-extractor",
   "version": "1.0.0",
-  "description": "A minimal public web grabber and OSINT collection workspace called Data Tool.",
+  "description": "A desktop app for YouTube transcript analysis, OSINT extraction, and image/face reverse search.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

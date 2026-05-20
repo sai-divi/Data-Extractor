@@ -1639,5 +1639,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Data Tool running at http://localhost:${PORT}`);
+  console.log(`Data Extractor running at http://localhost:${PORT}`);
 });

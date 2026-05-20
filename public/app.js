@@ -326,7 +326,7 @@ function bindInputs() {
   elements.closeSearchOverlay.addEventListener("click", closeSearchOverlay);
 
   // Theme toggle
-  const savedTheme = localStorage.getItem("data-tool-theme");
+  const savedTheme = localStorage.getItem("data-extractor-theme");
   if (savedTheme === "dark") document.documentElement.classList.add("dark");
   elements.themeToggle.addEventListener("click", toggleTheme);
   elements.ocrButton.addEventListener("click", runImageOcr);
@@ -2211,7 +2211,7 @@ function resetWorkspace() {
 
 function toggleTheme() {
   const isDark = document.documentElement.classList.toggle("dark");
-  localStorage.setItem("data-tool-theme", isDark ? "dark" : "light");
+  localStorage.setItem("data-extractor-theme", isDark ? "dark" : "light");
 }
 
 function setStatus(message, tone = "neutral") {
