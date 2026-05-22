@@ -905,11 +905,11 @@ function flagToxicContent(chunks) {
   chunks.forEach((chunk) => {
     const text = chunk.text;
     for (const { pattern, reason } of TOXIC_PATTERNS) {
-      const wordBounded = new RegExp('\\b(?:' + pattern.source + ')\\b', pattern.flags);
-      const match = text.match(wordBounded);
-      if (match) {
+      const flags = pattern.flags.includes('g') ? pattern.flags : pattern.flags + 'g';
+      const wordBounded = new RegExp('\\b(?:' + pattern.source + ')\\b', flags);
+      const matches = text.matchAll(wordBounded);
+      for (const match of matches) {
         flagged.push({ start: chunk.start, text: chunk.text, reason, match: match[0].trim() });
-        break;
       }
     }
   });
