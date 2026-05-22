@@ -902,14 +902,19 @@ const TOXIC_PATTERNS = [
 
 function flagToxicContent(chunks) {
   const flagged = [];
+  const seen = new Set();
   chunks.forEach((chunk) => {
     const text = chunk.text;
     for (const { pattern, reason } of TOXIC_PATTERNS) {
+      const key = chunk.start + '|' + reason;
+      if (seen.has(key)) continue;
       const flags = pattern.flags.includes('g') ? pattern.flags : pattern.flags + 'g';
       const wordBounded = new RegExp('\\b(?:' + pattern.source + ')\\b', flags);
       const matches = text.matchAll(wordBounded);
       for (const match of matches) {
         flagged.push({ start: chunk.start, text: chunk.text, reason, match: match[0].trim() });
+        seen.add(key);
+        break;
       }
     }
   });
