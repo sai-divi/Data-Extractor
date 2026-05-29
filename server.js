@@ -959,6 +959,11 @@ const TOXIC_PATTERNS = [
   { pattern: /\bk[e3]l[i1]ng\b/i, reason: "Anti-Indian racial slur (keling)" },
   { pattern: /[e3][a4]t\s*m[o0]nkey\s*br[a4][i1]ns?/i, reason: "Anti-Indian food stereotype (eat monkey brains)" },
   { pattern: /d[u4]sky\s*p[e3]r[i1]l/i, reason: "Anti-Indian xenophobic historical term (dusky peril)" },
+  { pattern: /(?:i?ndian|i?ndi[a4]ns?|desi)\s*sc[a4]mm[e3]r/i, reason: "Anti-Indian racial stereotype (Indian scammer)" },
+  { pattern: /d[o0]n(?:'t|t)?\s*r[e3]d[e3][e4]m/i, reason: "Anti-Indian racial meme (do not redeem)" },
+  { pattern: /br[o0]wnf[a4]c[e3]/i, reason: "Anti-Indian racial impersonation (brownface)" },
+  { pattern: /(?:i?ndian|i?ndi[a4]ns?|desi)\s*(?:c[o0]nven[i1]enc[e3]\s*st[o0]r[e3]|m[o0]t[e3]l)/i, reason: "Anti-Indian occupational stereotype" },
+  { pattern: /(?:i?ndian|desi)\s*w[o0]m[e3]n\s*(?:subm[i1]ss[i1]v[e3]|[o0]ppr[e3]ss[e3]d)/i, reason: "Anti-Indian gendered stereotype" },
 ];
 
 function flagToxicContent(chunks) {
